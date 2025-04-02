@@ -1,3 +1,4 @@
+---
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
@@ -11,3 +12,19 @@ spec:
         echo "Cleaning up resources..."
         oc delete all --all -n $(context.pipelineRun.namespace)
         echo "Cleanup completed."
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: nose-test-task
+spec:
+  steps:
+    - name: run-nose-tests
+      image: python:3.10
+      script: |
+        #!/bin/sh
+        pip install nose
+        echo "Running Nose tests..."
+        nosetests --with-xunit
+        echo "Nose tests completed."
